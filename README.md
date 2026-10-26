@@ -1,78 +1,153 @@
-# PDAC-GUARD Frontend Upgrade
+# PDAC-GUARD 🧬
+### Missingness-Aware Selective Prediction for Explainable Pancreatic Ductal Adenocarcinoma (PDAC) Risk Stratification
 
-A modern Streamlit research dashboard for the PDAC-GUARD end-semester project. It visualizes the project's consolidated evaluation tables and provides a local dataset-audit workflow.
+PDAC-GUARD is a research-focused machine learning and analytics dashboard designed to investigate pancreatic cancer biomarker data, missing-data robustness, selective prediction, cohort shift, and model calibration.
 
-## What's included
+Built using Python and Streamlit, the project explores how incomplete biomarker measurements and differences between patient cohorts can affect model performance and reliability.
 
-- Research overview and baseline model comparison
-- Case-input completeness audit (not a disease prediction)
-- CSV/Excel dataset upload and schema/missingness audit
-- Baseline model benchmark page
-- Random-masking and biomarker-outage stress-test visuals
-- Cohort-held-out and sample-origin-held-out metrics
-- Calibration estimates with bootstrap confidence intervals
-- Methods, reference, and limitations page
-- Consolidated tables and figures from the current project report
+> **Disclaimer:** PDAC-GUARD is an academic research prototype, not a clinically validated diagnostic tool. It must not be used to diagnose cancer or guide medical decisions.
 
-## Important safety boundary
+## Key Features
 
-No verified serialized model artifact is bundled. Therefore the app **does not generate PDAC risk probabilities or a diagnosis**. The Case Readiness page only checks numeric input validity and missing-input counts. Do not use this application for clinical decisions. This is a research visualization prototype.
+- **Model Benchmarking:** Compare Logistic Regression, Random Forest, XGBoost, and Soft Voting models.
+- **Missingness Analysis:** Investigate missing biomarker patterns and evaluate performance under simulated missing-data scenarios.
+- **Selective Prediction:** Explore confidence-based and biomarker-availability-based abstention strategies.
+- **Cohort-Shift Evaluation:** Assess model performance across available dataset groups.
+- **Calibration Analysis:** Examine probability calibration using metrics such as Brier score and Expected Calibration Error (ECE).
+- **Interactive Dashboard:** Explore research results and dataset characteristics through a Streamlit interface.
+- **Dataset Auditing:** Review data completeness, class distribution, and cohort-level patterns.
 
-## Run on Windows
+## Research Objectives
 
-1. Extract the ZIP to a folder, e.g. `C:\Projects\PDAC_GUARD_Frontend_Upgrade`.
-2. Open PowerShell in that folder.
-3. Create and activate a virtual environment:
+1. Evaluate machine learning approaches for PDAC biomarker-based risk stratification.
+2. Investigate the effect of missing biomarker measurements on predictive performance.
+3. Explore selective prediction strategies that allow a model to abstain when evidence is insufficient.
+4. Compare model performance across different dataset cohorts.
+5. Examine calibration and reliability alongside discrimination metrics.
 
-   ```powershell
-   py -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   ```
+## Dataset
 
-4. Install requirements:
+The project uses the Debernardi pancreatic cancer biomarker dataset, containing urine biomarker measurements and clinical variables.
 
-   ```powershell
-   python -m pip install --upgrade pip
-   pip install -r requirements.txt
-   ```
+**Selected features:**
+- CA19-9
+- LYVE1
+- REG1B
+- TFF1
+- Age
+- Creatinine
 
-5. Start the app:
+The analysed dataset contains 590 labelled records after excluding records with missing diagnoses. CA19-9 has substantial missingness, making it a key variable in the missing-data analysis.
 
-   ```powershell
-   streamlit run app.py
-   ```
+Use the original dataset source and comply with its licensing and usage conditions when redistributing data. Do not upload sensitive or restricted patient information.
 
-6. Open the local URL printed by Streamlit (normally `http://localhost:8501`).
+## Technology Stack
 
-Or double-click `run_app.bat` after installing Python; the script creates a venv if needed and starts Streamlit.
+- **Language:** Python
+- **Dashboard:** Streamlit
+- **Data processing:** Pandas, NumPy
+- **Machine learning:** Scikit-learn, XGBoost
+- **Visualisation:** Matplotlib, Plotly
+- **Development:** Visual Studio Code, Git, GitHub
 
-## Run on macOS / Linux
+## Project Structure
+
+```text
+PDAC-GUARD/
+├── app.py
+├── requirements.txt
+├── README.md
+└── data/
+    └── Place permitted dataset files here
+```
+
+*The structure above is a suggested layout. Adjust it to match the files actually included in your repository.*
+
+## Installation and Setup
+
+### 1. Clone the repository
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
+git clone https://github.com/YOUR-USERNAME/PDAC-GUARD.git
+cd PDAC-GUARD
+```
+
+Replace `YOUR-USERNAME` with your GitHub username.
+
+### 2. Create a virtual environment
+
+```bash
+py -m venv .venv
+```
+
+Activate it on Windows:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
+```
+
+### 4. Run the dashboard
+
+```bash
 streamlit run app.py
 ```
 
-## Dataset upload
+Open the local URL displayed in the terminal, usually `http://localhost:8501`.
 
-The Dataset Studio accepts `.csv`, `.xlsx`, `.xlsm`, and `.xls`. For Excel, it reads a sheet named `SAMPLES` if present; otherwise it uses the first sheet. Expected predictors are:
+## Evaluation Approach
 
-- `Plasma CA19-9`
-- `LYVE1`
-- `REG1B`
-- `TFF1`
-- `Age`
-- `Creatinine`
+The research investigates several complementary dimensions:
 
-It recognizes `is_PDAC` as a binary target, or the common diagnosis-code column `Diagnosis (1=Control, 2=Benign, 3=PDAC)` with code 3 mapped to PDAC and codes 1/2 mapped to non-PDAC. Column names may include common assay units. Audit results are for exploratory review and do not retrain a model.
+| Evaluation area | Purpose |
+|---|---|
+| Discrimination | Evaluate the ability to rank PDAC and non-PDAC cases |
+| Missingness robustness | Assess performance when biomarker measurements are unavailable |
+| Selective prediction | Study abstention and coverage-risk trade-offs |
+| Cohort shift | Examine performance differences across dataset groups |
+| Calibration | Assess the reliability of predicted probabilities |
 
-## Project data
+Results should be interpreted in the context of cohort size, class prevalence, missingness patterns, and evaluation design. Group-held-out evaluation within this dataset does not constitute independent external clinical validation.
 
-The `data/tables/` and `data/figures/` folders contain copies of the consolidated result tables and supporting figures. If you update model results, replace the relevant CSVs with fresh outputs after reconciling column names and definitions.
+## Current Project Status
 
-## Deployment note
+**Status: Research prototype**
 
-For a public deployment, do not upload identifiable patient data. Consider access restrictions and your university's data governance requirements before exposing an upload tool to a shared URL.
+The dashboard supports research exploration and analysis of pre-generated experimental results. A verified, serialized predictive model is not currently integrated into the frontend as a live clinical prediction system.
+
+Future work may include:
+- Independent external validation on an appropriate dataset.
+- Improved missingness-aware evaluation methods.
+- More robust calibration assessment.
+- Transparent abstention policies and coverage-risk analysis.
+- Reproducible experiments and expanded documentation.
+
+## Ethical Considerations
+
+Pancreatic cancer prediction is a high-stakes application. Model performance can be affected by dataset composition, missing measurements, cohort differences, and class imbalance. Results presented by this project are experimental and must not be interpreted as medical advice or evidence of clinical readiness.
+
+## Author
+
+**Kartikay Mathur**  
+B.Tech Biotechnology & Chemical Engineering  
+Manipal University Jaipur
+
+GitHub: [@imkartikaym](https://github.com/imkartikaym)
+
+## Contributions
+
+Suggestions, issues, and research discussions are welcome. Please open an issue to discuss potential improvements or methodological questions.
+
+## License
+
+Choose and add an appropriate open-source license before distributing the repository. Ensure that the dataset and any third-party components permit your intended use.
+
+---
+
+*PDAC-GUARD — Exploring reliable, explainable, and missingness-aware machine learning for biomedical research.*
